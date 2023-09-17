@@ -1,89 +1,118 @@
 import java.util.*;
-import java.util.Scanner;
 
-class Jobs{
-    String id;
-    int deadline;
+public class JobSchedule1 implements Comparable<JobSchedule1> {
+
+    String jName;
     int profit;
-    Jobs(String id,int deadline, int profit){
-        this.id = id;
-        this.deadline = deadline;
+    int deadline;
+
+    // ... (constructor and getter/setter methods)
+
+   
+    public void setjName(String jName) {
+        this.jName = jName;
+    }
+
+    public void setProfit(int profit) {
         this.profit = profit;
     }
-    @Override
-    public String toString() {
-        return "Job ID: " + id + ", Deadline: " + deadline + ", Profit: " + profit;
+
+    public void setDeadline(int deadline) {
+        this.deadline = deadline;
     }
-}
-public class Ass2 {
-    public static void main(String[] args) {
-        Scanner sc = new Scanner(System.in);
-        ArrayList <Jobs> arr = new ArrayList<>();
 
-        System.out.print("Enter total Jobs : ");
-        int n = sc.nextInt();
-        System.out.println("Job Id : Job Deadline : Job Profit : ");
-        for (int i=0; i<n;i++){
-            String id = sc.next();
-            int deadline = sc.nextInt();
-            int profit = sc.nextInt();
+    public String getjName() {
+        return jName;
+    }
 
-            arr.add(new Jobs(id,deadline,profit));
+    public int getProfit() {
+        return profit;
+    }
+
+    public int getDeadline() {
+        return deadline;
+    }
+
+    public JobSchedule1(String jName,int profit,int deadline){
+	
+		this.jName=jName;
+		this.profit=profit;
+		this.deadline=deadline;
+	
+	}
+
+    public static void main(String args[]) {
+        ArrayList<JobSchedule1> lst = new ArrayList<>();
+
+        // lst.add(new JobSchedule1("j1", 35, 1));
+        // lst.add(new JobSchedule1("j2", 30, 2));
+        // lst.add(new JobSchedule1("j3", 25, 1));
+        // lst.add(new JobSchedule1("j4", 20, 2));
+        // lst.add(new JobSchedule1("j5", 1, 3));
+
+        lst.add(new JobSchedule1("j1",35,3));
+    lst.add(new JobSchedule1("j2",30,4));
+    lst.add(new JobSchedule1("j3",25,4));
+    lst.add(new JobSchedule1("j4",20,1));
+    lst.add(new JobSchedule1("j5",15,3));
+
+    lst.add(new JobSchedule1("j6",12,1));
+
+    lst.add(new JobSchedule1("j7",5,2));
+
+	// lst.add(new JobSchedule1("j5",1,3));
+
+        Collections.sort(lst);
+
+        System.out.println("Sorted Sequence of jobs is");
+        System.out.println("job name \t profit \t deadline");
+
+        for (JobSchedule1 o : lst) {
+            System.out.println(o.getjName() + "\t" + o.getProfit() + "\t" + o.getDeadline());
         }
 
-        // Sort the arr in descending order using comparator
-        arr.sort(Comparator.comparingInt((Jobs jobs) -> jobs.profit).reversed());
-        
-        // find max deadline
         int maxDeadline = 0;
-        for (Jobs job: arr) {
-            if (job.deadline > maxDeadline){
-                maxDeadline = job.deadline;
+        for (JobSchedule1 o : lst) {
+            maxDeadline = Math.max(maxDeadline, o.getDeadline());
+        }
+
+        int[] schedule = new int[maxDeadline];
+        Arrays.fill(schedule, -1); // Initialize the schedule array with -1 to indicate empty slots
+
+        int totalProfit = 0;
+
+        for (JobSchedule1 job : lst) {
+            for (int j = job.getDeadline() - 1; j >= 0; j--) {
+                if (schedule[j] == -1) {
+                    schedule[j] = job.getProfit();
+                    totalProfit += job.getProfit();
+                    System.out.println(job.getProfit());
+
+                    break;
+                }
+
             }
         }
-        System.out.println("Max deadline is : "+maxDeadline);
 
-        // print
-        System.out.println("Sorting jobs : ");
-        for (Jobs jobs : arr) {
-            System.out.println(jobs);
-        }
+        System.out.println("Final Sequence of jobs is");
+        System.out.println("job name \t profit \t deadline");
 
-        // initialise an array
-        int[] deadlineBool = new int[maxDeadline+1];
-        Arrays.fill(deadlineBool,0);
-        
-        // logic
-        int count =0;
-        int profit =0;
-        ArrayList <Jobs> resultArr = new ArrayList<>();
-
-        for (Jobs job: arr){
-            if (count < maxDeadline){
-                if (deadlineBool[job.deadline]==0){
-                    deadlineBool[job.deadline] = 1;
-                    profit+= job.profit;
-                    count+=1;
-                    resultArr.add(job);
-                }
-                else {
-                    for (int i = job.deadline;i>=1; i--){
-                        if (deadlineBool[i]==0){
-                            deadlineBool[i] = 1;
-                            profit+= job.profit;
-                            count+=1;
-                            resultArr.add(job);
-                            break;
-                        }
+        for (int i = 0; i < maxDeadline; i++) {
+            if (schedule[i] != -1) {
+                for (JobSchedule1 job : lst) {
+                    if (job.getProfit() == schedule[i]) {
+                        System.out.println(job.getjName() + "\t" + job.getProfit() + "\t" + job.getDeadline());
+                        break;
                     }
                 }
             }
         }
 
-        System.out.println("\nSequence of Jobs according to maximum profit : ");
-        for (Jobs job: resultArr){
-            System.out.println(job);
-        }
-        System.out.println("Total profit is : "+profit);
+        System.out.println("Total Profit: " + totalProfit);
+    }
+
+    @Override
+    public int compareTo(JobSchedule1 o) {
+        return o.profit - this.profit; // Descending order based on profit
     }
 }
