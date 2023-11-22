@@ -1,0 +1,44 @@
+public class Warshall {
+    
+    public static void main(String args[]){
+
+
+        int inf =Integer.MAX_VALUE;
+
+        //int[][] matrix = new int[5][5];
+        int matrix[][]={
+            
+            {0,3,inf,7},
+            {8,0,2,inf},
+            {5,inf,0,1},
+            {2,inf,inf,0}
+        };
+
+        for(int k=0;k<4;k++){
+            for(int i=0;i<4;i++){
+                for(int j=0;j<4;j++){
+
+                   // matrix[i][j]=Math.min(matrix[i][j],matrix[i][k]+matrix[k][j]);
+                   if(matrix[i][k]<inf && matrix[k][j]<inf){
+                    if((matrix[i][k]+matrix[k][j]<matrix[i][j])){
+                        matrix[i][j]=matrix[i][k]+matrix[k][j];
+                    }
+                }
+                }
+            }
+            System.out.println("Resultant Matrix after "+(k+1));
+            for(int i=0;i<4;i++){
+              
+                for(int j=0;j<4;j++){
+                    System.out.print(matrix[i][j]+" ");
+                }
+                System.out.println();
+            }
+        }
+
+       
+
+
+
+    }
+}
